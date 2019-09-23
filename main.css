@@ -23,6 +23,10 @@
     right: 10px;
     filter: hue-rotate(-45deg); 
 }
+.polybox .select {
+    position: absolute;
+    
+}
 .polybox .boxtxt {
     position: absolute;
     /* top:5px;

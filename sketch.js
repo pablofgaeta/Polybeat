@@ -3,8 +3,10 @@ let ids = [];
 let boxes = [];
 let divisions = [];
 let divDisplays = [];
+let soundLoops = [];
 let startDiv = 4;
 let freeSounds = [];
+
 
 
 function setup() {
@@ -47,11 +49,38 @@ class Poly {
 		let id = createElement('div', 'beat: ' + (boxes.length)).addClass('boxtxt').parent(polybox).position(0, 10).style('font-size', '30px').center('horizontal');
 		ids.push(id);
 
-		let division = createSlider(1, 15, startDiv, 1).addClass('division').parent(polybox).position(0,60).center('horizontal'); 
+		let soundLoop;
+
+		let select = createElement('select', 
+			'<optgroup label="Built-in">' +
+				'<option value=-1>none</option>' +
+                '<option value=0>kick</option>' +
+                '<option value=1>snare</option>' +
+				'<option value=2>hihat</option>' +
+				'<option value=3>conga</option>' +
+				'<option value=4>cowbell</option>' +	
+			'</optgroup>' +
+            '<optgroup label="Add Sound">' +
+				'<option value=4>newsound</option>' +
+			'</optgroup>'
+		).addClass('select').size(80).parent(polybox).position(0, 60).center('horizontal');
+		select.changed(() => {
+			soundLoop = new p5.SoundLoop(() => {
+				freeSounds[select.value()].play();
+			})
+			soundLoops.push(soundLoop);
+		});
+
+		let division = createSlider(1, 15, startDiv, 1).addClass('division').parent(polybox).position(0,80).center('horizontal'); 
 		divisions.push(division);
 
-		let divDisplay = createElement('div', 'Division: ' + startDiv).addClass('boxtxt').addClass('divDisplay').parent(polybox).position(0, 85).style('font-size', '15px').center('horizontal');
+		let divDisplay = createElement('div', 'Division: ' + startDiv).addClass('boxtxt').addClass('divDisplay').parent(polybox).position(0, 105).style('font-size', '15px').center('horizontal');
 		divDisplays.push(divDisplay);
+
+		let start = createButton('Start').addClass('select').parent(polybox).position(0,130).center('horizontal');
+		start.mousePressed(() => {
+			soundLoop.start();
+		})
 
 		exit.mousePressed(() => {
 			// Delete
@@ -71,6 +100,7 @@ class Poly {
 	}
 	
 }
+
 function markListener(element){
 	element.mouseOver(() => {
 		element.style('background-color', "#F2C9ED");
