@@ -6,7 +6,7 @@ let divDisplays = [];
 let soundLoops = [];
 let startDiv = 4;
 let freeSounds = [];
-
+let masterLoop;
 
 
 function setup() {
@@ -20,12 +20,21 @@ function setup() {
 	for(var i = 0; i < 5; i++) {
 		freeSounds.push(loadSound('./resources/sounds/drums/' + i + '.mp3'));
 	}
+
+	// Master loop for modules to slave off of
+	masterLoop = new p5.SoundLoop(() => {
+		// Nothing happens, just used to sync all loops
+	});
+	masterLoop.start();
 }
 
 function draw() {
 	// Update each divisions display
 	for (var i = 0; i < divDisplays.length; i++) {
 		divDisplays[i].html('Divisions: ' + divisions[i].value());
+		if(soundLoops[i] != null) {
+			soundLoops[i].interval = normalizeTempo(divisions[i].value());
+		}
 	}
 }
 
@@ -41,16 +50,18 @@ class Poly {
 	}
 	createPoly(){
 
+		// Poly box is the container for each beat module
 		let polybox = createElement('div', '').addClass('polybox').value((boxes.length + 1));
 		boxes.push(polybox);
 
+		// Exit is a button for closing a module. Mouse Pressed fxn defined after all elements defined
 		let exit = createImg('./resources/pngs/exit.png').addClass('exit').parent(polybox);
 
+		// Id displays the index of module starting at 1. Updates dynamically when modules are deleted
 		let id = createElement('div', 'beat: ' + (boxes.length)).addClass('boxtxt').parent(polybox).position(0, 10).style('font-size', '30px').center('horizontal');
 		ids.push(id);
 
-		let soundLoop;
-
+		// Select displays the options for drum type
 		let select = createElement('select', 
 			'<optgroup label="Built-in">' +
 				'<option value=-1>none</option>' +
@@ -64,30 +75,63 @@ class Poly {
 				'<option value=4>newsound</option>' +
 			'</optgroup>'
 		).addClass('select').size(80).parent(polybox).position(0, 60).center('horizontal');
-		select.changed(() => {
-			soundLoop = new p5.SoundLoop(() => {
-				freeSounds[select.value()].play();
-			})
-			soundLoops.push(soundLoop);
-		});
+		
 
+		// A slider for storing the polyrhythm division of current module
 		let division = createSlider(1, 15, startDiv, 1).addClass('division').parent(polybox).position(0,80).center('horizontal'); 
 		divisions.push(division);
 
+		// Display that shows the current division chosen
 		let divDisplay = createElement('div', 'Division: ' + startDiv).addClass('boxtxt').addClass('divDisplay').parent(polybox).position(0, 105).style('font-size', '15px').center('horizontal');
 		divDisplays.push(divDisplay);
 
+		// Start button activates loop or stops
 		let start = createButton('Start').addClass('select').parent(polybox).position(0,130).center('horizontal');
 		start.mousePressed(() => {
-			soundLoop.start();
-		})
+			if(select.value() != -1) {
+				if(start.html() == 'Start') {
+					soundLoops[polybox.value() - 1].syncedStart(masterLoop);
+				}
+				else {
+					soundLoops[polybox.value() - 1].stop();
+				}
+			}
+			start.html(start.html() == 'Start' ? 'Stop' : 'Start');
+		});
+
+		// Listener to update soundLoop fxn
+		select.changed(() => {
+			let soundLoop = null;
+			let wasPlaying = false;
+
+			// If there's a current soundloop playing on the
+			// module, stop and remove it from array
+			if (soundLoops[polybox.value() - 1] != null) {
+				wasPlaying = soundLoops[polybox.value() - 1].isPlaying;
+				if(wasPlaying) {soundLoops[polybox.value() - 1].stop();}
+				soundLoops.splice(polybox.value() - 1, 1);
+			}
+			// Create new sound loop
+			soundLoop = new p5.SoundLoop(() => {
+				freeSounds[select.value()].play();
+			})
+			soundLoop.interval = normalizeTempo(startDiv);
+			soundLoops.push(soundLoop);
+
+			if(wasPlaying) {soundLoops[polybox.value() - 1].syncedStart(masterLoop);}
+		});
 
 		exit.mousePressed(() => {
-			// Delete
+			// Pop from arrays
+			boxes.splice(polybox.value() - 1, 1);
 			ids.splice(polybox.value() - 1, 1);
-			boxes.splice(polybox.value() - 1,1);
 			divisions.splice(polybox.value() - 1, 1);
 			divDisplays.splice(polybox.value() - 1, 1);
+
+			// Stop sound loop and remove from array
+			if (soundLoops[polybox.value() - 1] != null) { soundLoops[polybox.value() - 1].stop();}
+			soundLoops.splice(polybox.value() - 1, 1);
+
 			polybox.remove();
 
 			// Reassign
@@ -99,6 +143,10 @@ class Poly {
 		});
 	}
 	
+}
+
+function normalizeTempo(inTempo) {
+	return 1.0 * startDiv / inTempo;
 }
 
 function markListener(element){
