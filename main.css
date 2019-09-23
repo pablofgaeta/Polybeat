@@ -10,16 +10,17 @@
     display: inline-block;
     width: 200px;
     height: 300px;
-    background-color: rgba(0, 0, 0, 0.228);
+    background-color: rgb(216, 216, 216);
     margin: 10px;
     position: relative;
+    border-radius: 10px;
 }
 .polybox .exit {
     position: absolute; 
     width: 20px;
     height: 20px;
-    top: 5px;
-    right: 5px;
+    top: 10px;
+    right: 10px;
 }
 .polybox .id {
     position: absolute;

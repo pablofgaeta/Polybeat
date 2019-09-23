@@ -20,10 +20,10 @@ class Poly {
 	constructor(title) {
 		this.title = title;
 
-		this.add = createButton('+');
-		this.add.position(10,30);
-		this.add.size(50,50);
+		this.add = createImg('./pngs/add.png').position(10,10).size(130,100).style('border-radius', '10px');
 		this.add.mousePressed(this.createPoly);
+		this.markListener(this.add);
+
 		
 		this.header = select("#header").html(this.title);
 	}
@@ -47,6 +47,14 @@ class Poly {
 				ids[i].value(i+1);
 			}
 		});
+	}
+	markListener(element){
+		element.mouseOver(() => {
+			element.style('background-color', "#F2C9ED");
+		})
+		element.mouseOut(() => {
+			element.style('background-color', "#FFFFFF");
+		})
 	}
 }
 
