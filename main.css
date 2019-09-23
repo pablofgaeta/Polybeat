@@ -21,14 +21,20 @@
     height: 20px;
     top: 10px;
     right: 10px;
+    filter: hue-rotate(-45deg); 
 }
-.polybox .id {
+.polybox .boxtxt {
     position: absolute;
-    top:5px;
-    left:20%;
+    /* top:5px;
+    left:20%; */
     color: #56bbdf;
     text-align: center;
     font-family: "Work Sans", sans-serif;
     font-weight: 200;
-    font-size : 30px;
+}
+.polybox .division {
+    position: absolute;
+}
+.divDisplay {
+    position: absolute;
 }
