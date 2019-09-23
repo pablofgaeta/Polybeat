@@ -158,6 +158,7 @@ function markListener(element){
 	})
 }
 
+// Allow for keyboard drums
 function keyPressed() {
 	if(keyCode == 65) {
 		freeSounds[0].play();
