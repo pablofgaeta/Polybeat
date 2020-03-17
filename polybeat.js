@@ -5,6 +5,9 @@ let modules = [];
 const EPS_TIME = 10;
 let num_playing = 0;
 
+let err_sum = 0;
+let err_num = 0;
+
 function setup() {
 	noCanvas();
 
@@ -18,20 +21,17 @@ function setup() {
 }
 
 function draw() {
-   // Update values
    for (var i = 0; i < modules.length; ++i) {
       modules[i]["divDisplay"].html('Divisions: ' + modules[i]["division"].value());
-      if (modules[i]['loop'].is_playing)
-         modules[i]['loop'].next_play_time -= deltaTime;
-   }
-   // Play sound if necessary
-   for (var i = 0; i < modules.length; ++i) {
       if ( !modules[i]['loop'].is_playing ) continue;
+
+      modules[i]['loop'].next_play_time -= deltaTime;
       if (modules[i]['loop'].next_play_time < EPS_TIME) {
-         console.log("Playing: " + modules[i]['loop'].next_play_time);
+         // err_sum += modules[i]['loop'].next_play_time; ++err_num;
+         // console.log("Avg. Error: " + (err_sum / err_num));
+
          modules[i]['loop'].sound_file.play();
          modules[i]['loop'].next_play_time += modules[i]['loop'].play_rate;
-         console.log("Next play: " + modules[i]['loop'].next_play_time);
       }
    }
 }
@@ -154,7 +154,6 @@ function enter_loops(loop) {
    else {
       loop.next_play_time = modules[0]['loop'].next_play_time;
    }
-   console.log("Next play: " + loop.next_play_time);
 }
 
 // Allow for keyboard drums
