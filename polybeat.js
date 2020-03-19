@@ -4,6 +4,9 @@ let modules = [];
 let num_playing = 0;
 let play_speed = 100;
 let isActive = true;
+let import_sound;
+let select_options = '';
+let frameCount = 0;
 
 const EPS_TIME = 10;
 const START_BEAT = 4;
@@ -13,6 +16,12 @@ const START_BEAT = 4;
 document.addEventListener("visibilitychange", function() {
   isActive = document.visibilityState == 'visible';
 });
+
+
+document.addEventListener("unload", function() {
+   custom_draw();
+});
+
 
 function setup() {
 	noCanvas();
@@ -24,6 +33,13 @@ function setup() {
 		freeSounds.push(loadSound('./resources/sounds/drums/' + i + '.mp3'));
 	}
 
+   select_options =  '<optgroup label="Audio Samples">' +
+                     '<option value=0>kick</option>' +
+                     '<option value=1>snare</option>' +
+                     '<option value=2>hihat</option>' +
+                     '<option value=3>conga</option>' +
+                     '<option value=4>cowbell</option>';
+
 	custom_draw();
 }
 
@@ -31,7 +47,7 @@ function custom_draw() {
 	if (focused && isActive) {
 		for (var i = 0; i < modules.length; ++i) {
 	      modules[i]["divDisplay"].html('Divisions: ' + modules[i]["division"].value());
-			if ( !modules[i]['loop'].is_playing ) continue;
+			if ( !modules[i]['loop'].is_looping ) continue;
 
 			// Decrease time to next play by deltaTime (time in between frames)
 	      modules[i]['loop'].next_play_time -= deltaTime;
@@ -69,19 +85,34 @@ class Poly {
       // let polybox = createElement('div', '').addClass('polybox').value(0);
       let polybox = createElement('div', '').addClass('polybox').value(modules.length);
 
-      // Exit is a button for closing a module. Mouse Pressed fxn defined after all elements defined
-      let exit = createImg('./resources/pngs/exit.png', 'exit').addClass('exit').parent(polybox);
-
       // Id displays the index of module starting at 1. Updates dynamically when modules are deleted
       // let id = createElement('div', 'beat: ').addClass('boxtxt').parent(polybox).position(0, 10).style('font-size', '30px').center('horizontal');
       let id = createElement('div', 'beat: ' + (modules.length + 1)).addClass('boxtxt').parent(polybox).position(0, 10).style('font-size', '30px').center('horizontal');
+
+      // Exit is a button for closing a module. Mouse Pressed fxn defined after all elements defined
+      let exit = createImg('./resources/pngs/exit.png', 'exit').addClass('exit').parent(polybox);
+
+      exit.mousePressed(() => {
+         modules.splice(polybox.value(), 1);
+
+         if (loop.sound_file != null && loop.sound_file.isPlaying()) {
+            loop.sound_file.stop();
+         }
+         polybox.remove();
+
+         for (var i = 0; i < modules.length; ++i) {
+            modules[i]["polybox"].value(i);
+            modules[i]["id"].html('beat: ' + (i+1));
+         }
+		});
+
 
       // A slider for storing the polyrhythm division of current module
       let division = createSlider(1, 16, START_BEAT, 1).addClass('division').parent(polybox).position(0,80).center('horizontal');
 
       division.changed(() => {
          loop.play_rate = division.value();
-			if (loop.sound_file != null && loop.is_playing) {
+			if (loop.sound_file != null && loop.is_looping) {
 				loop.enter_loops();
 			}
       });
@@ -90,49 +121,48 @@ class Poly {
       let divDisplay = createElement('div', 'Division: ' + START_BEAT).addClass('boxtxt').addClass('divDisplay').parent(polybox).position(0, 105).style('font-size', '15px').center('horizontal');
 
       // Select displays the options for drum type
-      let select = createElement('select',
-         '<optgroup label="Built-in">' +
-         '<option value=-1>none</option>' +
-         '<option value=0>kick</option>' +
-         '<option value=1>snare</option>' +
-         '<option value=2>hihat</option>' +
-         '<option value=3>conga</option>' +
-         '<option value=4>cowbell</option>' +
-         '</optgroup>' +
-         '<optgroup label="Add Sound">' +
-         '<option value=4>newsound</option>' +
-         '</optgroup>'
-      ).addClass('select').size(80).parent(polybox).position(0, 60).center('horizontal');
+      let select = createElement('select', select_options).addClass('select').size(80).parent(polybox).position(0, 60).center('horizontal');
 
       // Listener to update soundLoop fxn
 		select.changed(() => {
-         if (select.value() > -1 && select.value() < freeSounds.length)
+         var was_playing = false;
+         if (loop.sound_file.isPlaying()) { loop.sound_file.stop(); was_playing = true; }
+         if (select.value() < freeSounds.length)
 				loop.sound_file = freeSounds[select.value()];
+         if (was_playing) loop.play_sound();
 		});
+
 
 		// Start button activates loop or stops
 		let start = createButton('Start').addClass('select').parent(polybox).position(0,130).center('horizontal');
 		start.mousePressed(() => {
          if (loop.sound_file != null) {
-            start.html(loop.is_playing ? 'Start' : 'Stop');
-            loop.is_playing = !loop.is_playing;
-            if (loop.is_playing) { loop.enter_loops(); ++num_playing; }
-            else            { loop.next_play_time = 0; --num_playing; }
+            start.html(loop.is_looping ? 'Start' : 'Stop');
+            loop.is_looping = !loop.is_looping;
+            if (loop.is_looping) { loop.enter_loops(); ++num_playing; }
+            else { loop.next_play_time = 0; loop.sound_file.stop(); --num_playing; }
          }
 			else {
 				start.html("Start");
 			}
 		});
 
-		exit.mousePressed(() => {
-         modules.splice(polybox.value(), 1);
-         polybox.remove();
+      let importDisplay = createElement('div', '💚Import New Sound💚').addClass('boxtxt').addClass('importDisplay').parent(polybox).position(0, 240).style('font-size', '15px').center('horizontal');
 
-         for (var i = 0; i < modules.length; ++i) {
-            modules[i]["polybox"].value(i);
-            modules[i]["id"].html('beat: ' + (i+1));
-         }
-		});
+      let add_sound = createFileInput( (file) => {
+         // for (let file of files) {
+            if (file.type === 'audio') {
+               console.log(file);
+               freeSounds.push(loadSound(file.data));
+               var briefname = file.name.substring(0, file.name.length - 1 - file.subtype.length);
+               select_options += '<option value=' + (freeSounds.length - 1) + '>' + briefname + '</option>';
+               select.html(select_options);
+            }
+            else {
+               alert('🤦bruh... audio only🤦');
+            }
+         // }
+      }, 'true').addClass('file_input').parent(polybox).position(60,270);
 
       modules.push({
          "polybox"    : polybox,
@@ -148,13 +178,16 @@ class PolyLoop {
 	constructor () {
       this.next_play_time = 0;
       this.play_rate      = START_BEAT;
-      this.sound_file     = null;
-      this.is_playing     = false;
+      this.sound_file     = freeSounds[0];
+      this.is_looping     = false;
       this.count          = 0;
    }
 
 	play_sound() {
-		if (this.sound_file != null) this.sound_file.play();
+		if (this.sound_file != null) {
+         if (this.sound_file.isPlaying()) this.sound_file.stop();
+         this.sound_file.play();
+      }
 	}
 
 	increment_count () {
@@ -172,7 +205,7 @@ class PolyLoop {
 	   }
 	   else {
 			for (var i = 0; i < modules.length; ++i) {
-				if (modules[i]['loop'].is_playing) {
+				if (modules[i]['loop'].is_looping) {
 					this.next_play_time = modules[i]['loop'].next_play_time;
 				}
 			}
