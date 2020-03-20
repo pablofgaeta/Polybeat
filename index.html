@@ -7,8 +7,6 @@
 
 	<title>Polybeat</title>
 
-	<script src="libraries/p5.js"></script>
-	<script src="libraries/p5.sound.js"></script>
 	<script src="polybeat.js"></script>
 
 	<!--
@@ -27,8 +25,35 @@
 			margin:auto;
 		}
 	</style>
+	<script>
+		function speedSliderUpdate(event) {
+			var slider_width = document.getElementById('speed_slider').offsetWidth;
+			play_speed = 10 * (1 - ((window.innerWidth + slider_width) / 2 - event.clientX) / slider_width);
+			console.log(play_speed);
+		}
+	</script>
+
 </head>
-<body>
-		<div id="header" class="header"></div>
+<body onload="start()">
+	<img src="./resources/pngs/add.png" alt="add_button" class="add-button" onmouseup='createPoly()'></img>
+	<div id="header" class="header">Polybeat</div>
+	<div id="audio-samples">
+		<audio preload src='resources/sounds/drums/0.mp3'></audio>
+		<audio preload src='resources/sounds/drums/1.mp3'></audio>
+		<audio preload src='resources/sounds/drums/2.mp3'></audio>
+		<audio preload src='resources/sounds/drums/3.mp3'></audio>
+		<audio preload src='resources/sounds/drums/4.mp3'></audio>
+	</div>
+
+	<div id="container">
+		<div class="vertpad"></div>
+		<div id="toolbox" class="tools">
+
+			<!-- <div id="speed_slider" class="speedSlider" onmouseup="speedSliderUpdate(event)">
+				<div class="speedTxt">Modify speed</div>
+			</div> -->
+		</div>
+
+	</div>
 </body>
 </html>

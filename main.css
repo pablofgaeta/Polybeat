@@ -1,3 +1,4 @@
+/* HEADER TITLE CLASS */
 .header {
     color: #56bbdf;
     text-align: center;
@@ -6,15 +7,43 @@
     font-size : 100px;
     margin: 0 auto;
 }
+
+.add-button {
+   position : absolute;
+   background-color: #FFFFFF;
+   top : 10px;
+   left : 10px;
+   width : 130px;
+   height : 100px;
+   border-radius: 10px;
+   transition : .2s;
+}
+
+.add-button:hover {
+   background-color : #F2C9ED;
+}
+
+/* TOOL OUTER DIV CLASS */
+.tools {
+   height : 150px;
+   background : rgb(244, 247, 136);
+
+}
+
+/* POLYBOX OUTER DIV CLASS */
 .polybox {
     display: inline-block;
     width: 200px;
     height: 300px;
-    background-color: rgb(216, 216, 216);
     margin: 10px;
     position: relative;
     border-radius: 10px;
+    background : #6fcfef;
+    z-index : 0;
+    border  : 1px solid black;
 }
+
+/* POLYBOX EXIT BUTTON (IMG) CLASS */
 .polybox .exit {
     position: absolute;
     width: 20px;
@@ -22,30 +51,121 @@
     top: 10px;
     right: 10px;
 }
-.polybox .select {
-    position: absolute;
+
+/* POLYBOX SELECT SOUND OPTIONS CLASS */
+.polybox .options {
+   position : absolute;
+   width: 80px;
+   top: 60px;
+   left : 0px;
+   right : 0px;
+   margin:auto;
 }
 
-.polybox .file_input {
+
+/* POLYBOX SLIDER CLASSES */
+
+.polybox .slider {
+  -webkit-appearance: none;
+  position : absolute;
+  top      : 90px;
+  left     : 0px;
+  right    : 0px;
+  width    : 50%;
+  height   : 15px;
+  margin : auto;
+  background : rgb(244, 247, 136);
+  outline: none;
+  /* opacity: .7;
+  -webkit-transition: .2s;
+  transition: opacity .2s; */
+}
+
+/* HOVER ANIMATION END */
+.polybox .slider:hover {
+  opacity: 1;
+}
+
+/* SLIDER SELECTOR WEBKIT */
+.polybox .slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background: rgb(245, 176, 233);
+  cursor: pointer;
+}
+
+/* SLIDER SELECTOR MOZILLA */
+.polybox .slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  background: rgb(245, 176, 233);
+  cursor: pointer;
+}
+
+/* POLYBOX TEXT CLASSES */
+
+.polybox .txt {
+   position: absolute;
+   left : 0;
+   right : 0;
+   color: white;
+   text-align: center;
+   font-family: "Work Sans", sans-serif;
+   font-weight: 200;
+}
+
+.polybox .title {
+   font-size: 30px;
+   top : 10px;
+}
+
+.polybox .div-display {
+   font-size : 15px;
+   top : 110px;
+}
+
+.polybox .import-display {
+   font-size: 15px;
+   bottom : 40px;
+}
+
+/* POLYBOX START TOGGLER BUTTON */
+.polybox .start-toggle {
+   position : absolute;
+   top: 135px;
+   left : 0px;
+   right : 0px;
+   margin:auto;
+}
+
+/* POLYBOX FILE INPUT CLASSES */
+
+.polybox .file-input {
    position: absolute;
    width : 100px;
    color : transparent;
+   left : 60px;
+   bottom : 15px;
 }
-.polybox .boxtxt {
-    position: absolute;
-    /* top:5px;
-    left:20%; */
-    color: #56bbdf;
-    text-align: center;
-    font-family: "Work Sans", sans-serif;
-    font-weight: 200;
+
+/* GENERIC VERTICAL PADDING */
+
+.vertpad {
+   height : 10px;
 }
-.polybox .division {
-    position: absolute;
-}
-.divDisplay {
-    position: absolute;
-}
+
+/* .speedSlider {
+   margin : auto;
+   width : 50vw;
+   height : 100px;
+   background-color : #56bbdf;
+   border-radius: 5px;
+   text-align : center;
+   vertical-align : center;
+} */
+
 :focus {
-    outline: none;
+   outline : none;
 }
