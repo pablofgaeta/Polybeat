@@ -10,25 +10,43 @@
 
 .add-button {
    position : absolute;
-   background-color: #FFFFFF;
    top : 10px;
    left : 10px;
    width : 130px;
    height : 100px;
    border-radius: 10px;
-   transition : .2s;
 }
 
-.add-button:hover {
-   background-color : #F2C9ED;
+.add-rect {
+   fill : #56bbdf;
+   transition : .2s;
+   pointer-events: all;
+}
+
+.add-button .add-rect:hover {
+   fill : #F2C9ED;
 }
 
 /* TOOL OUTER DIV CLASS */
 .tools {
-   height : 150px;
+   display: flex;
+   flex-wrap : wrap;
+   justify-content: center;
+   align-items: center;
    background : rgb(244, 247, 136);
-
 }
+
+.tools > div.toolbox {
+   width: 150px;
+   height : 100px;
+   margin: 10px;
+   text-align: center;
+   line-height: 75px;
+   border-radius: 10px;
+   background : #F2C9ED;
+}
+
+
 
 /* POLYBOX OUTER DIV CLASS */
 .polybox {
@@ -39,7 +57,6 @@
     position: relative;
     border-radius: 10px;
     background : #6fcfef;
-    z-index : 0;
     border  : 1px solid black;
 }
 

@@ -2,7 +2,7 @@ let polyApp;
 let freeSounds = [];
 let sound_container;
 let modules = [];
-let play_speed = 10;
+let play_speed = 5;
 let num_playing = 0;
 let draw_speed = 5;
 let hrc; // High res clock
@@ -10,7 +10,7 @@ let is_focused = true;
 
 const START_BEAT = 4;
 
-class MiniClock {
+class HighResClock {
    constructor () {
       this.first   = 0;
       this.second  = 0;
@@ -24,44 +24,30 @@ class MiniClock {
    }
 }
 
-window.onblur = function (){
-	is_focused = false;
-}
-window.onfocus = function (){
-   is_focused = true;
-}
-// too make it complete, also add onblur to document.
-// For browsers using tabs (like firefox)
+window.onblur   = () => { is_focused = false; }
+window.onfocus  = () => { is_focused = true; }
 document.onblur = window.onblur;
-document.focus = window.focus;
+document.focus  = window.focus;
 
 function start() {
-   // noCanvas();
-
    sound_container = document.getElementById('audio-samples');
 
-   hrc = new MiniClock();
+   hrc = new HighResClock();
    hrc.start();
    custom_draw();
 }
 
 function custom_draw() {
-	if (is_focused) {
-      hrc.stop();
-		for (var i = 0; i < modules.length; ++i) {
-         if ( modules[i]['loop'].looping() )
-            modules[i]['loop'].step_one_frame(hrc.delta());
-	   }
-      setTimeout(custom_draw, 4);
-	}
-   else setTimeout(custom_draw, 1000);
+   hrc.stop();
+	for (var i = 0; i < modules.length; ++i) {
+      if ( modules[i]['loop'].looping() )
+         modules[i]['loop'].step_one_frame(hrc.delta());
+   }
+   setTimeout(custom_draw, 4);
    hrc.start();
 }
 
-function createPoly() {
-
-   let loop = new PolyLoop();
-
+function createPolyBox () {
    for (var i = 0; i < modules.length; ++i) {
       modules[i]['polybox'].style.border = 'none';
    }
@@ -75,8 +61,16 @@ function createPoly() {
       }
       this.style.border = '2px solid black';
    }
-   container.insertBefore(polybox, null);
+   return polybox;
+}
 
+
+function createPoly() {
+
+   let loop = new PolyLoop();
+
+   let polybox = createPolyBox();
+   container.insertBefore(polybox, null);
 
    // Id displays the index of module starting at 1. Updates dynamically when modules are deleted
    let id = {
@@ -88,10 +82,9 @@ function createPoly() {
    polybox.appendChild(id.div);
 
 
-
    // Exit is a button for closing a module. Mouse Pressed fxn defined after all elements defined
    let exit       = document.createElement('img');
-   exit.src       = './resources/pngs/exit.png';
+   exit.src       = './resources/imgs/exit.png';
    exit.className = 'exit';
    exit.onmouseup = () => {
       modules.splice(id.idx, 1);
@@ -123,7 +116,7 @@ function createPoly() {
    division.type      = 'range';
    division.min       = '1';
    division.max       = '16';
-   division.value     = '' + START_BEAT;
+   division.value     = START_BEAT;
    division.step      = '1';
    division.className = 'slider';
    division.oninput = function() {
@@ -166,7 +159,7 @@ function createPoly() {
 
 
    let import_display = document.createElement('div');
-   import_display.innerHTML = '💚Import New Sound💚';
+   import_display.innerHTML = '💛Import New Sound 💛';
    import_display.className = 'txt import-display';
    polybox.appendChild(import_display);
 
