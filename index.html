@@ -54,17 +54,21 @@
 <body onload="start()">
 	<div id="header" class="header">Polybeat</div>
 
+
 	<div id="container">
 		<div class="vertpad"></div>
 		<div id="tools" class="tools">
 			<div class="toolbox txt" style='font-size:35px' onclick='createPoly()'>add module</div>
 			<div class="toolbox txt" onclick='document.getElementById("audio_input").click()' style='font-size:40px'>
-				add sound
+				import sound
 				<input id='audio_input' type='file' accept='audio/*' multiple style='display:none' oninput='handleSoundFile(event)'/>
 			</div>
+			<!-- <div class="toolbox"></div>
 			<div class="toolbox"></div>
-			<div class="toolbox"></div>
-			<div class="toolbox"></div>
+			<div class="toolbox"></div> -->
+		</div>
+		<div id='beat_modules' class='beat-modules'>
+
 		</div>
 	</div>
 

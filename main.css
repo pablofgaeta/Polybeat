@@ -1,6 +1,6 @@
 /* HEADER TITLE CLASS */
 .header {
-    color: #56bbdf;
+    color: #6fcfef;
     text-align: center;
     font-family: "Work Sans", sans-serif;
     font-weight: 200;
@@ -15,7 +15,7 @@
    flex-wrap : wrap;
    justify-content: center;
    align-items: center;
-   background : rgb(244, 247, 136);
+   background : rgb(244, 247, 136); /* Yellow */
 }
 
 .tools > .toolbox {
@@ -25,12 +25,12 @@
    margin: 10px;
    text-align: center;
    border-radius: 10px;
-   background : #F2C9ED;
-   transition : .1s;
+   background : #6fcfef;
+   transition : .2s;
 }
 
 .toolbox:hover {
-   background : #56bbdf;
+   background : #F2C9ED;
 }
 
 .tools .txt {
@@ -44,16 +44,31 @@
 
 /* POLYBOX OUTER DIV CLASS */
 .polybox {
+   position: relative;
     display: inline-block;
     width: 200px;
     height: 200px;
     margin: 10px;
-    position: relative;
     border-radius: 10px;
     background : #6fcfef;
     border : none;
-    /* border  : 1px solid black; */
+    animation: fadeIn ease .5s;
+   -webkit-animation: fadeIn ease .5s;
+   -moz-animation: fadeIn ease .5s;
+   -o-animation: fadeIn ease .5s;
+   -ms-animation: fadeIn ease .5s;
 }
+
+@keyframes fadeIn { 0% { opacity:0; } 100% { opacity:1; } }
+
+@-moz-keyframes fadeIn { 0% { opacity:0; } 100% { opacity:1; } }
+
+@-webkit-keyframes fadeIn { 0% { opacity:0; } 100% { opacity:1; } }
+
+@-o-keyframes fadeIn { 0% { opacity:0; } 100% { opacity:1; } }
+
+@-ms-keyframes fadeIn { 0% { opacity:0; } 100% { opacity:1; } }
+
 
 /* POLYBOX EXIT BUTTON (IMG) CLASS */
 .polybox .exit {
@@ -86,11 +101,8 @@
   width    : 50%;
   height   : 15px;
   margin : auto;
-  background : rgb(244, 247, 136);
+  background: white;
   outline: none;
-  /* opacity: .7;
-  -webkit-transition: .2s;
-  transition: opacity .2s; */
 }
 
 /* HOVER ANIMATION END */
@@ -104,7 +116,7 @@
   appearance: none;
   width: 15px;
   height: 15px;
-  background: rgb(245, 176, 233);
+  background : rgb(255, 214, 249);
   cursor: pointer;
 }
 
@@ -112,7 +124,7 @@
 .polybox .slider::-moz-range-thumb {
   width: 15px;
   height: 15px;
-  background: rgb(245, 176, 233);
+  background : rgb(255, 214, 249);
   cursor: pointer;
 }
 
@@ -141,6 +153,12 @@
 /* POLYBOX START TOGGLER BUTTON */
 .polybox .start-toggle {
    position : absolute;
+   width : 50px;
+   height : 40px;
+   color : #56bbdf;
+   background-color : #ffffff;
+   border : none;
+   border-radius: 5px;
    top: 135px;
    left : 0px;
    right : 0px;
@@ -156,4 +174,51 @@
 ::selection {}
 
 @media only screen and (max-width: 750px) {
+}
+
+
+
+/* CSS RESET */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
 }

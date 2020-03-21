@@ -60,7 +60,7 @@ function createPoly() {
    // Poly box is the container for each beat module
    let polybox       = document.createElement('div');
    polybox.className = 'polybox';
-   container.insertBefore(polybox, null);
+   document.getElementById('beat_modules').appendChild(polybox);
 
    // Id displays the index of module starting at 1. Updates dynamically when modules are deleted
    let id = {
@@ -133,7 +133,12 @@ function createPoly() {
    let start = document.createElement('button');
    start.innerHTML = 'Start';
    start.className = 'start-toggle';
+   start.style.cursor = 'pointer';
+   start.onmousedown = function () {
+      this.style.backgroundColor = 'rgb(242, 201, 237)';
+   };
    start.onmouseup = function () {
+      this.style.backgroundColor = '#ffffff';
       if (loop.is_playable()) {
          this.innerHTML = loop.looping() ? 'Start' : 'Stop';
          loop.toggle_state();
@@ -142,6 +147,8 @@ function createPoly() {
    };
    polybox.appendChild(start);
 
+   // Trigger fade-in animation
+   // polybox.style.opacity = '1';
 
    modules.push({
       "polybox"    : polybox,
@@ -149,6 +156,8 @@ function createPoly() {
       "division"   : division,
       "loop"       : loop,
    });
+
+   return polybox;
 }
 
 class PolyLoop {
