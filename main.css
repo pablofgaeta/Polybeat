@@ -4,28 +4,10 @@
     text-align: center;
     font-family: "Work Sans", sans-serif;
     font-weight: 200;
-    font-size : 100px;
+    font-size : 80px;
     margin: 0 auto;
 }
 
-.add-button {
-   position : absolute;
-   top : 10px;
-   left : 10px;
-   width : 130px;
-   height : 100px;
-   border-radius: 10px;
-}
-
-.add-rect {
-   fill : #56bbdf;
-   transition : .2s;
-   pointer-events: all;
-}
-
-.add-button .add-rect:hover {
-   fill : #F2C9ED;
-}
 
 /* TOOL OUTER DIV CLASS */
 .tools {
@@ -36,28 +18,41 @@
    background : rgb(244, 247, 136);
 }
 
-.tools > div.toolbox {
+.tools > .toolbox {
+   display: relative;
    width: 150px;
    height : 100px;
    margin: 10px;
    text-align: center;
-   line-height: 75px;
    border-radius: 10px;
    background : #F2C9ED;
+   transition : .1s;
 }
 
+.toolbox:hover {
+   background : #56bbdf;
+}
+
+.tools .txt {
+   vertical-align: middle;
+   font-family: "Work Sans", sans-serif;
+   line-height: 50px;
+   color : white;
+   cursor : pointer;
+}
 
 
 /* POLYBOX OUTER DIV CLASS */
 .polybox {
     display: inline-block;
     width: 200px;
-    height: 300px;
+    height: 200px;
     margin: 10px;
     position: relative;
     border-radius: 10px;
     background : #6fcfef;
-    border  : 1px solid black;
+    border : none;
+    /* border  : 1px solid black; */
 }
 
 /* POLYBOX EXIT BUTTON (IMG) CLASS */
@@ -143,11 +138,6 @@
    top : 110px;
 }
 
-.polybox .import-display {
-   font-size: 15px;
-   bottom : 40px;
-}
-
 /* POLYBOX START TOGGLER BUTTON */
 .polybox .start-toggle {
    position : absolute;
@@ -157,32 +147,13 @@
    margin:auto;
 }
 
-/* POLYBOX FILE INPUT CLASSES */
+/* GENERAL STYLES */
 
-.polybox .file-input {
-   position: absolute;
-   width : 100px;
-   color : transparent;
-   left : 60px;
-   bottom : 15px;
-}
+.vertpad { height : 10px; }
 
-/* GENERIC VERTICAL PADDING */
+:focus { outline : none; }
 
-.vertpad {
-   height : 10px;
-}
+::selection {}
 
-/* .speedSlider {
-   margin : auto;
-   width : 50vw;
-   height : 100px;
-   background-color : #56bbdf;
-   border-radius: 5px;
-   text-align : center;
-   vertical-align : center;
-} */
-
-:focus {
-   outline : none;
+@media only screen and (max-width: 750px) {
 }

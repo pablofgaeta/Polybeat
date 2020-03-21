@@ -8,10 +8,7 @@
 	<title>Polybeat</title>
 
 	<script src="polybeat.js"></script>
-
-	<!--
-		Style
-	-->
+	<!-- Fonts -->
 	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="main.css">
 
@@ -32,17 +29,45 @@
 			console.log(play_speed);
 		}
 
+		function handleSoundFile(event) {
+			var select_objs = document.getElementsByClassName('options');
+			const files = event.target.files;
+	      console.log(files);
+			console.log(select_objs);
+	      for (let file of files) {
+	         var new_sound = document.createElement('audio');
+	         new_sound.src = URL.createObjectURL(file);
+	         sound_container.appendChild(new_sound);
+
+				select_options += '<option value=' + (sound_container.children.length - 1) + '>' + file.name + '</option>';
+	      }
+			for (var i = 0; i < select_objs.length; ++i) {
+				var prev_selected_value = select_objs[i].value;
+				select_objs[i].innerHTML = select_options;
+				select_objs[i].value = prev_selected_value;
+			}
+		}
+
 	</script>
 
 </head>
 <body onload="start()">
-	<svg width="130px" height="100px" viewBox="0 0  130 100" preserveAspectRatio="xMidYMid meet" class='add-button' onmouseup='createPoly()'>
-		<rect class="add-rect" id="add_rect" x="0" y="0" width="130" height="100" rx="10" ry="10"/>
-		<text id="add_text" style="fill:white;font-family:Arial;font-size:20px;" x="25" y="30" >add beat</text>
-		<line id="add_line_vert" x1="50%" y1="40" x2="50%" y2="90" style="stroke:white;fill:none;stroke-width:5px;"/>
-		<line id="add_line_horz" x1="40" y1="63" x2="90" y2="63" style="stroke:white;fill:none;stroke-width:5px;"/>
-	</svg>
 	<div id="header" class="header">Polybeat</div>
+
+	<div id="container">
+		<div class="vertpad"></div>
+		<div id="tools" class="tools">
+			<div class="toolbox txt" style='font-size:35px' onclick='createPoly()'>add module</div>
+			<div class="toolbox txt" onclick='document.getElementById("audio_input").click()' style='font-size:40px'>
+				add sound
+				<input id='audio_input' type='file' accept='audio/*' multiple style='display:none' oninput='handleSoundFile(event)'/>
+			</div>
+			<div class="toolbox"></div>
+			<div class="toolbox"></div>
+			<div class="toolbox"></div>
+		</div>
+	</div>
+
 	<div id="audio-samples">
 		<audio preload src='resources/sounds/drums/0.mp3'></audio>
 		<audio preload src='resources/sounds/drums/1.mp3'></audio>
@@ -51,20 +76,6 @@
 		<audio preload src='resources/sounds/drums/4.mp3'></audio>
 	</div>
 
-	<div id="container">
-		<div class="vertpad"></div>
-		<div id="tools" class="tools">
-			<div class="toolbox"></div>
-			<div class="toolbox"></div>
-			<div class="toolbox"></div>
-			<div class="toolbox"></div>
-			<div class="toolbox"></div>
 
-			<!-- <div id="speed_slider" class="speedSlider" onmouseup="speedSliderUpdate(event)">
-				<div class="speedTxt">Modify speed</div>
-			</div> -->
-		</div>
-
-	</div>
 </body>
 </html>

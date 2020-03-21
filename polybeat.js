@@ -1,12 +1,10 @@
-let polyApp;
-let freeSounds = [];
 let sound_container;
 let modules = [];
 let play_speed = 5;
 let num_playing = 0;
 let draw_speed = 5;
 let hrc; // High res clock
-let is_focused = true;
+let select_options;
 
 const START_BEAT = 4;
 
@@ -24,6 +22,7 @@ class HighResClock {
    }
 }
 
+let is_focused = true;
 window.onblur   = () => { is_focused = false; }
 window.onfocus  = () => { is_focused = true; }
 document.onblur = window.onblur;
@@ -31,6 +30,12 @@ document.focus  = window.focus;
 
 function start() {
    sound_container = document.getElementById('audio-samples');
+
+   select_options =  '<option value=0>kick</option>' +
+                     '<option value=1>snare</option>' +
+                     '<option value=2>hihat</option>' +
+                     '<option value=3>conga</option>' +
+                     '<option value=4>cowbell</option>';
 
    hrc = new HighResClock();
    hrc.start();
@@ -47,29 +52,14 @@ function custom_draw() {
    hrc.start();
 }
 
-function createPolyBox () {
-   for (var i = 0; i < modules.length; ++i) {
-      modules[i]['polybox'].style.border = 'none';
-   }
-
-   // Poly box is the container for each beat module
-   let polybox       = document.createElement('div');
-   polybox.className = 'polybox';
-   polybox.onclick   = function () {
-      for (var i = 0; i < modules.length; ++i) {
-         modules[i]['polybox'].style.border = 'none';
-      }
-      this.style.border = '2px solid black';
-   }
-   return polybox;
-}
-
 
 function createPoly() {
 
    let loop = new PolyLoop();
 
-   let polybox = createPolyBox();
+   // Poly box is the container for each beat module
+   let polybox       = document.createElement('div');
+   polybox.className = 'polybox';
    container.insertBefore(polybox, null);
 
    // Id displays the index of module starting at 1. Updates dynamically when modules are deleted
@@ -132,12 +122,7 @@ function createPoly() {
 
    // Select displays the options for drum type
    let select = document.createElement('select');
-   select.innerHTML = '<optgroup label="Audio Samples">' +
-                     '<option value=0>kick</option>' +
-                     '<option value=1>snare</option>' +
-                     '<option value=2>hihat</option>' +
-                     '<option value=3>conga</option>' +
-                     '<option value=4>cowbell</option>';
+   select.innerHTML = select_options;
    select.className = 'options';
    select.onchange  = function () {
       loop.set_sound(this.value);
@@ -158,38 +143,11 @@ function createPoly() {
    polybox.appendChild(start);
 
 
-   let import_display = document.createElement('div');
-   import_display.innerHTML = '💛Import New Sound 💛';
-   import_display.className = 'txt import-display';
-   polybox.appendChild(import_display);
-
-
-   let add_sound = document.createElement('input');
-   add_sound.type      = 'file';
-   add_sound.accept    = 'audio/*';
-   add_sound.multiple  = 'true';
-   add_sound.className = 'file-input';
-   add_sound.oninput    = function (event) {
-      const files = event.target.files;
-      console.log(files);
-      for (let file of files) {
-         var prev_selected_value = select.value;
-
-         var new_sound = document.createElement('audio');
-         new_sound.src = URL.createObjectURL(file);
-         sound_container.appendChild(new_sound);
-
-         select.innerHTML += '<option value=' + (sound_container.children.length - 1) + '>' + file.name + '</option>';
-         select.value = prev_selected_value;
-      }
-   }
-   polybox.appendChild(add_sound);
-
    modules.push({
       "polybox"    : polybox,
       "id"         : id,
       "division"   : division,
-      "loop"       : loop
+      "loop"       : loop,
    });
 }
 
@@ -197,7 +155,6 @@ class PolyLoop {
 	constructor () {
       this.next_play_time = 0;
       this.play_rate      = START_BEAT;
-      // this.sound_file     = freeSounds[0];
       this.sound_file     = sound_container.children[0];
       this.is_looping     = false;
       this.count          = 0;
