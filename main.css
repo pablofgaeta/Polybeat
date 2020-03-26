@@ -8,6 +8,13 @@
     margin: 0 auto;
 }
 
+.beat-modules {
+   display : flex;
+   flex-wrap : wrap;
+   justify-content: center;
+   align-items: center;
+}
+
 
 /* TOOL OUTER DIV CLASS */
 .tools {
@@ -173,7 +180,14 @@
 
 ::selection {}
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: 600px) {
+   .polybox {
+      width : 150px;
+   }
+   .polybox .exit {
+      width : 10px;
+      height : 10px;
+   }
 }
 
 
