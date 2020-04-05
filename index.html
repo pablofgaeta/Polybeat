@@ -63,10 +63,36 @@
 				import sound
 				<input id='audio_input' type='file' accept='audio/*' multiple style='display:none' oninput='handleSoundFile(event)'/>
 			</div>
+			<div class="toolbox txt" style='font-size:35px'>
+				speed
+				<input id='speed-slider' type="range" min=".1" max="10" step=".1" value="8" class="title-slider" onmousedown='pause_all_loops()' ontouchstart='pause_all_loops()' onmouseup="enter_all_loops()" ontouchend='enter_all_loops()'></input>
+				<script>
+				function pause_all_loops() {
+					modules.forEach(mod => {mod.loop.sound_file.volume = 0;});
+				}
+
+				function enter_all_loops() {
+					play_speed = document.getElementById('speed-slider').value;
+					modules.forEach(mod => {mod.loop.sound_file.volume = 1; mod.loop.reset_npt()});
+				}
+				</script>
+			</div>
 			<!-- <div class="toolbox"></div>
 			<div class="toolbox"></div>
 			<div class="toolbox"></div> -->
 		</div>
+		<!-- <div id="tools2" class="tools" style="background: url('resources/imgs/Network.png');">
+			<div class="toolbox txt" style='font-size:35px; background-color: pink; width: 100px;' onclick=''>0</div>
+			<div class="toolbox txt" style='font-size:35px; background-color: pink; width: 100px;' onclick=''>1</div>
+			<div class="toolbox txt" style='font-size:35px; background-color: pink; width: 100px;' onclick=''>2</div>
+			<div class="toolbox txt" style='font-size:35px; background-color: pink; width: 100px;' onclick=''>3</div>
+			<div class="toolbox txt" style='font-size:35px; background-color: pink; width: 100px;' onclick=''>4</div>
+			<div class="toolbox txt" style='font-size:35px; background-color: pink; width: 100px;' onclick=''>5</div>
+			<div class="toolbox txt" style='font-size:35px; background-color: pink; width: 100px;' onclick=''>6</div>
+			<div class="toolbox txt" style='font-size:35px; background-color: pink; width: 100px;' onclick=''>7</div>
+			<div class="toolbox txt" style='font-size:35px; background-color: pink; width: 100px;' onclick=''>8</div>
+			<div class="toolbox txt" style='font-size:35px; background-color: pink; width: 100px;' onclick=''>9</div>
+		</div> -->
 		<div id='beat_modules' class='beat-modules'>
 		</div>
 	</div>

@@ -1,6 +1,6 @@
 let sound_container;
 let modules = [];
-let play_speed = 5;
+let play_speed = 8;
 let num_playing = 0;
 let draw_speed = 5;
 let hrc; // High res clock
@@ -101,6 +101,17 @@ function createPoly() {
 
 
 
+   // Select displays the options for drum type
+   let select = document.createElement('select');
+   select.innerHTML = select_options;
+   select.className = 'options';
+   select.onchange  = function () {
+      loop.set_sound(this.value);
+   };
+   polybox.appendChild(select);
+
+
+
    // A slider for storing the polyrhythm division of current module
    let division       = document.createElement('input');
    division.type      = 'range';
@@ -117,17 +128,6 @@ function createPoly() {
       div_display.innerHTML = 'Division: ' + this.value;
    };
    polybox.appendChild(division);
-
-
-
-   // Select displays the options for drum type
-   let select = document.createElement('select');
-   select.innerHTML = select_options;
-   select.className = 'options';
-   select.onchange  = function () {
-      loop.set_sound(this.value);
-   };
-   polybox.appendChild(select);
 
 
    let start = document.createElement('button');
@@ -160,6 +160,10 @@ function createPoly() {
    return polybox;
 }
 
+function audio_is_playing(file) {
+   return file.currentTime > 0 || !file.paused;
+}
+
 class PolyLoop {
 	constructor () {
       this.next_play_time = 0;
@@ -175,6 +179,7 @@ class PolyLoop {
    }
 
    is_playing() {
+      // return audio_is_playing(this.sound_file);
       return this.sound_file.currentTime > 0 || !this.sound_file.paused;
    }
 
@@ -212,11 +217,8 @@ class PolyLoop {
 	}
 
    set_sound(sound_idx) {
-      var was_playing = false;
-      if (this.is_playing()) { this.stop_sound(); was_playing = true; }
       if (sound_idx < sound_container.children.length)
          this.sound_file = sound_container.children[sound_idx];
-      if (was_playing) this.play_sound();
    }
 
    stop_sound() {
@@ -251,10 +253,22 @@ class PolyLoop {
 }
 
 // Allow for keyboard drums
-function keyPressed() {
-	if      (keyCode == 65) sound_container.children[0].play();
-	else if (keyCode == 83) sound_container.children[1].play();
-	else if (keyCode == 68) sound_container.children[2].play();
-	else if (keyCode == 70) sound_container.children[3].play();
-	else if (keyCode == 71) sound_container.children[4].play();
+window.onkeypress = function(event) {
+   if (event.key < '0' || event.key > '9') return;
+   var idx = (parseInt(event.key) - 1 + 11) % 11;
+   if (idx < sound_container.children.length) {
+      if (audio_is_playing(sound_container.children[idx])) {
+         sound_container.children[idx].pause();
+         sound_container.children[idx].currentTime = 0;
+      }
+      sound_container.children[idx].play();
+   }
+
+   // let keyCode = event.key;
+   // console.log(keyCode);
+	// if      (keyCode == 'a') sound_container.children[0].play();
+	// else if (keyCode == 's') sound_container.children[1].play();
+	// else if (keyCode == 'd') sound_container.children[2].play();
+	// else if (keyCode == 'f') sound_container.children[3].play();
+	// else if (keyCode == 'g') sound_container.children[4].play();
 }

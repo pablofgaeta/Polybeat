@@ -26,7 +26,10 @@
 }
 
 .tools > .toolbox {
-   display: relative;
+   display: flex;
+   flex-wrap : wrap;
+   justify-content: center;
+   align-items: center;
    width: 150px;
    height : 100px;
    margin: 10px;
@@ -41,11 +44,34 @@
 }
 
 .tools .txt {
-   vertical-align: middle;
    font-family: "Work Sans", sans-serif;
-   line-height: 50px;
    color : white;
    cursor : pointer;
+}
+
+.title-slider {
+   -webkit-appearance: none;
+   width    : 60%;
+   height   : 20px;
+   margin : auto;
+   background: white;
+   outline: none;
+}
+
+.title-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background : rgb(255, 214, 249);
+  cursor: pointer;
+}
+
+.title-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background : rgb(255, 214, 249);
+  cursor: pointer;
 }
 
 
@@ -95,6 +121,8 @@
    right : 0px;
    margin:auto;
 }
+
+
 
 
 /* POLYBOX SLIDER CLASSES */
@@ -178,7 +206,7 @@
 
 :focus { outline : none; }
 
-::selection {}
+::selection { color: none; }
 
 @media only screen and (max-width: 600px) {
    .polybox {
